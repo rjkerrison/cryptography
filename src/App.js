@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import Cryptography from './cryptography';
+import { TextInput, NumberInput, Encrypted, Decrypted } from './Components'
 import './App.css';
 
 class App extends Component {
@@ -18,6 +19,8 @@ class App extends Component {
         <Caesar/>
         <h2>Polyalphabetic</h2>
         <Polyalphabetic/>
+        <h2>Polybius</h2>
+        <Polybius/>
       </div>
     );
   }
@@ -97,67 +100,61 @@ class Polyalphabetic extends Cryptography {
   }
 }
 
-class Encrypted extends Component {
+class Polybius extends Cryptography {
+  constructor(props) {
+    super(props);
+    this.state = {
+      decryptedValue: 'polybius square',
+    }
+    this.encrypt(this.state);
+  }
+
   render() {
     return (
-      <TextInput
-        value={this.props.value}
-        callback={this.props.callback}
-        inputName="encryptedValue"
-        inputLabel="Encrypted value"
-        />
+      <div className="Polybius">
+        <Encrypted
+          value={this.state.encryptedValue}
+          callback={this.recalculate.bind(this)}
+          />
+        <Decrypted
+          value={this.state.decryptedValue}
+          callback={this.recalculate.bind(this)}
+          />
+      </div>
       )
   }
-}
 
-class Decrypted extends Component {
-  render() {
-    return (
-      <TextInput
-        value={this.props.value}
-        callback={this.props.callback}
-        inputName="decryptedValue"
-        inputLabel="Decrypted value"
-        />
-      )
+  applyShift() {
+    return;
   }
-}
 
-class TextInput extends Component {
-  render() {
-    return (
-      <div className="input-group">
-          <label
-            htmlFor={this.props.inputName}>
-            {this.props.inputLabel}
-          </label>
-          <textarea
-            name={this.props.inputName}
-            value={this.props.value}
-            onChange={this.props.callback}></textarea>
-        </div>
-      )
+  decrypt(state) {
+    var beforeValue = state.encryptedValue;
+
+    var cryptCharCodes = [];
+    var polybiusCodes = beforeValue.split(',');
+    for (let i = 0; i < polybiusCodes.length / 2; i++) {
+      var letterNumber = (5 * polybiusCodes[2*i]) + (1 * polybiusCodes[2*i + 1]) - 6;
+      console.log(polybiusCodes[2*i], polybiusCodes[2*i + 1], letterNumber);
+      cryptCharCodes.push(Cryptography.getCharCodeFromNumber(letterNumber));
+    }
+
+    state.decryptedValue = String.fromCharCode.apply(null, cryptCharCodes)
   }
-}
 
-class NumberInput extends Component {
-  render() {
-    return (
-      <div className="input-group">
-          <label
-            htmlFor={this.props.inputName}>
-            {this.props.inputLabel}
-          </label>
-          <input
-            type="number"
-            min={this.props.min}
-            max={this.props.max}
-            name={this.props.inputName}
-            value={this.props.value}
-            onChange={this.props.callback}
-            />
-        </div>
-      )
+  encrypt(state) {
+    var beforeValue = state.decryptedValue;
+    var polybiusCodes = [];
+
+    for (let i = 0; i < beforeValue.length; i++) {
+      var letterNumber = Cryptography.getNumberFromCharacterCode(beforeValue.charCodeAt(i));
+      var polybiusRow = Math.floor(letterNumber / 5) + 1;
+      var polybiusColumn = (letterNumber % 5) + 1;
+      polybiusCodes.push(polybiusRow);
+      polybiusCodes.push(polybiusColumn);
+    }
+
+    state.encryptedValue = polybiusCodes.join(',')
   }
 }
 
