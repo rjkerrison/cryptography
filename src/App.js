@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import Cryptography from './cryptography';
 import './App.css';
 
 class App extends Component {
@@ -22,7 +23,7 @@ class App extends Component {
   }
 }
 
-class Caesar extends Component {
+class Caesar extends Cryptography {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,80 +35,32 @@ class Caesar extends Component {
   render () {
     return (
       <div className="Caesar">
-        <input
-          name="shift"
-          type="number"
+        <NumberInput
           value={this.state.shift}
-          onChange={this.recalculate.bind(this)}/>
-        <textarea
-          name="encryptedValue"
-          type="text"
+          callback={this.recalculate.bind(this)}
+          inputName="shift"
+          inputLabel="Shift Value"
+          min={0}
+          max={25}
+          />
+        <Encrypted
           value={this.state.encryptedValue}
-          onChange={this.recalculate.bind(this)}></textarea>
-        <textarea
-          name="decryptedValue"
-          type="text"
+          callback={this.recalculate.bind(this)}
+          />
+        <Decrypted
           value={this.state.decryptedValue}
-          onChange={this.recalculate.bind(this)}></textarea>
+          callback={this.recalculate.bind(this)}
+          />
       </div>
       )
   }
 
-  decrypt(state) {
-    var shift = state.shift;
-    var encryptedValue = state.encryptedValue;
-    var decryptedCharCodes = [];
-    for (var i = 0; i < encryptedValue.length; i++) {
-      var encryptedValueCharCode = encryptedValue.charCodeAt(i);
-      if (encryptedValueCharCode < 97 || encryptedValueCharCode > 122) {
-        decryptedCharCodes[i] = encryptedValueCharCode;
-      }
-      else {
-        var shiftedCharCode = 97 + ((26 + encryptedValueCharCode - 97 - shift) % 26);
-        decryptedCharCodes[i] = shiftedCharCode;
-      }
-    }
-    state.decryptedValue = String.fromCharCode.apply(null, decryptedCharCodes);
-  }
-
-  encrypt(state) {
-    var shift = state.shift;
-    var decryptedValue = state.decryptedValue;
-    var encryptedCharCodes = [];
-    for (var i = 0; i < decryptedValue.length; i++) {
-      var decryptedValueCharCode = decryptedValue.charCodeAt(i);
-      if (decryptedValueCharCode < 97 || decryptedValueCharCode > 122) {
-        encryptedCharCodes[i] = decryptedValueCharCode;
-      }
-      else {
-        var shiftedCharCode = 97 + ((26 + decryptedValueCharCode - 97 + shift) % 26);
-        encryptedCharCodes[i] = shiftedCharCode;
-      }
-    }
-    state.encryptedValue = String.fromCharCode.apply(null, encryptedCharCodes);
-  }
-
-  recalculate(event) {
-    event.preventDefault();
-    let formValues = this.state;
-    formValues[event.target.name] = event.target.value;
-
-    console.log(formValues);
-
-    if (event.target.name !== 'decryptedValue') {
-      this.decrypt(formValues)
-    }
-    else {
-      this.encrypt(formValues);
-    }
-
-    console.log(formValues);
-
-    this.setState(formValues);
+  applyShift(letterNumber, plusOrMinus, shift) {
+    return letterNumber + (plusOrMinus * shift);
   }
 }
 
-class Polyalphabetic extends Component {
+class Polyalphabetic extends Cryptography {
   constructor(props) {
     super(props);
     this.state = {
@@ -120,70 +73,91 @@ class Polyalphabetic extends Component {
   render () {
     return (
       <div className="Polyalphabetic">
-        <input
-          name="shift"
-          type="text"
+        <TextInput
           value={this.state.shift}
-          onChange={this.recalculate.bind(this)}/>
-        <textarea
-          name="encryptedValue"
-          type="text"
+          callback={this.recalculate.bind(this)}
+          inputName="shift"
+          inputLabel="Shift Word"
+          />
+        <Encrypted
           value={this.state.encryptedValue}
-          onChange={this.recalculate.bind(this)}></textarea>
-        <textarea
-          name="decryptedValue"
-          type="text"
+          callback={this.recalculate.bind(this)}
+          />
+        <Decrypted
           value={this.state.decryptedValue}
-          onChange={this.recalculate.bind(this)}></textarea>
+          callback={this.recalculate.bind(this)}
+          />
       </div>
       )
   }
 
-  decrypt(state) {
-    state.decryptedValue = this.crypt(state.encryptedValue, state.shift, -1);
+  applyShift(letterNumber, plusOrMinus, shift, shiftIndex) {
+    var shiftValue = Cryptography.getNumberFromCharacterCode(shift.charCodeAt(shiftIndex));
+    return letterNumber + (plusOrMinus * shiftValue);
   }
+}
 
-  encrypt(state) {
-    state.encryptedValue = this.crypt(state.decryptedValue, state.shift, +1);
+class Encrypted extends Component {
+  render() {
+    return (
+      <TextInput
+        value={this.props.value}
+        callback={this.props.callback}
+        inputName="encryptedValue"
+        inputLabel="Encrypted value"
+        />
+      )
   }
+}
 
-  crypt(beforeValue, shift, plusOrMinus) {
-    var shiftIndex = 0;
-    var cryptCharCodes = [];
-    var shiftValues = [];
-    for (let i = 0; i < shift.length; i++) {
-      shiftValues[i] = shift.charCodeAt(i) - 96;
-    }
-
-    console.log(shiftValues);
-
-    for (let i = 0; i < beforeValue.length; i++) {
-      var cryptedCharCode = beforeValue.charCodeAt(i);
-      if (cryptedCharCode < 97 || cryptedCharCode > 122) {
-        cryptCharCodes[i] = cryptedCharCode;
-      }
-      else {
-        var shiftedCharCode = 97 + ((26 + cryptedCharCode - 97 + (plusOrMinus) * shiftValues[shiftIndex]) % 26);
-        cryptCharCodes[i] = shiftedCharCode;
-        shiftIndex = (shiftIndex + 1) % shift.length;
-      }
-    }
-    return String.fromCharCode.apply(null, cryptCharCodes);
+class Decrypted extends Component {
+  render() {
+    return (
+      <TextInput
+        value={this.props.value}
+        callback={this.props.callback}
+        inputName="decryptedValue"
+        inputLabel="Decrypted value"
+        />
+      )
   }
+}
 
-  recalculate(event) {
-    event.preventDefault();
-    let formValues = this.state;
-    formValues[event.target.name] = event.target.value.toLowerCase();
+class TextInput extends Component {
+  render() {
+    return (
+      <div className="input-group">
+          <label
+            htmlFor={this.props.inputName}>
+            {this.props.inputLabel}
+          </label>
+          <textarea
+            name={this.props.inputName}
+            value={this.props.value}
+            onChange={this.props.callback}></textarea>
+        </div>
+      )
+  }
+}
 
-    if (event.target.name === 'encryptedValue') {
-      this.decrypt(formValues)
-    }
-    else {
-      this.encrypt(formValues);
-    }
-
-    this.setState(formValues);
+class NumberInput extends Component {
+  render() {
+    return (
+      <div className="input-group">
+          <label
+            htmlFor={this.props.inputName}>
+            {this.props.inputLabel}
+          </label>
+          <input
+            type="number"
+            min={this.props.min}
+            max={this.props.max}
+            name={this.props.inputName}
+            value={this.props.value}
+            onChange={this.props.callback}
+            />
+        </div>
+      )
   }
 }
 
