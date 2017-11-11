@@ -105,6 +105,7 @@ class Polybius extends Cryptography {
     super(props);
     this.state = {
       decryptedValue: 'polybius square',
+      delimiter: ','
     }
     this.encrypt(this.state);
   }
@@ -112,6 +113,12 @@ class Polybius extends Cryptography {
   render() {
     return (
       <div className="Polybius">
+        <TextInput
+          inputName="delimiter"
+          inputLabel="Delimiter"
+          value={this.state.delimiter}
+          callback={this.recalculate.bind(this)}
+          />
         <Encrypted
           value={this.state.encryptedValue}
           callback={this.recalculate.bind(this)}
@@ -132,10 +139,9 @@ class Polybius extends Cryptography {
     var beforeValue = state.encryptedValue;
 
     var cryptCharCodes = [];
-    var polybiusCodes = beforeValue.split(',');
+    var polybiusCodes = beforeValue.split(state.delimiter);
     for (let i = 0; i < polybiusCodes.length / 2; i++) {
       var letterNumber = (5 * polybiusCodes[2*i]) + (1 * polybiusCodes[2*i + 1]) - 6;
-      console.log(polybiusCodes[2*i], polybiusCodes[2*i + 1], letterNumber);
       cryptCharCodes.push(Cryptography.getCharCodeFromNumber(letterNumber));
     }
 
@@ -154,7 +160,7 @@ class Polybius extends Cryptography {
       polybiusCodes.push(polybiusColumn);
     }
 
-    state.encryptedValue = polybiusCodes.join(',')
+    state.encryptedValue = polybiusCodes.join(state.delimiter)
   }
 }
 
