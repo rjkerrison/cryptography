@@ -11,6 +11,15 @@ class Cryptography extends Component {
       throw new TypeError("Please implement Cryptography method applyShift.");
     }
   }
+  initialise() {
+    this.recalculate({
+      preventDefault: () => null,
+      target: {
+        name: 'encryptedValue',
+        value: this.state.encryptedValue
+      }
+    })
+  }
   applyShift() {
     throw new TypeError("Do not call Cryptography method applyShift from child.");
   }
@@ -56,6 +65,10 @@ class Cryptography extends Component {
     }
 
     this.setState(formValues);
+
+    if (typeof(this.props.callback) === 'function') {
+      this.props.callback(this.state);
+    }
   }
 
   static getNumberFromCharacterCode(charCode) {
