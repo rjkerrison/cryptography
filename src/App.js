@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
 import Caesar from './Caesar.jsx'
 import Polyalphabetic from './Polyalphabetic.jsx'
 import Polybius from './Polybius.jsx'
@@ -29,16 +28,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to relllllooooad.
-        </p>
-        <p>
-          {this.state.values}
-        </p>
         <h2>Caesar ({this.state.values[0]}, {this.state.values[1]})</h2>
         <Caesar
           inValue={this.state.values[0]}
