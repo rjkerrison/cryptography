@@ -4,15 +4,15 @@ import { NumberInput, Encrypted, Decrypted } from './Components'
 
 class Caesar extends Cryptography {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       encryptedValue: this.props.inValue,
       decryptedValue: 'akzi akzi',
-      shift: 1
+      shift: 1,
     }
     this.initialise()
   }
-  render () {
+  render() {
     return (
       <div className="Caesar">
         <NumberInput
@@ -22,22 +22,22 @@ class Caesar extends Cryptography {
           inputLabel="Shift Value"
           min={0}
           max={25}
-          />
+        />
         <Encrypted
           value={this.state.encryptedValue}
           callback={this.recalculate.bind(this)}
-          />
+        />
         <Decrypted
           value={this.state.decryptedValue}
           callback={this.recalculate.bind(this)}
-          />
+        />
       </div>
-      )
+    )
   }
 
   applyShift(letterNumber, plusOrMinus, shift) {
-    return letterNumber + (plusOrMinus * shift);
+    return letterNumber + plusOrMinus * shift
   }
 }
 
-export default Caesar;
+export default Caesar

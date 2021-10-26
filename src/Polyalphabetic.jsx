@@ -4,15 +4,15 @@ import { TextInput, Encrypted, Decrypted } from './Components'
 
 class Polyalphabetic extends Cryptography {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       encryptedValue: this.props.inValue,
       decryptedValue: 'akzi akzi',
-      shift: 'snake'
+      shift: 'snake',
     }
     this.initialise()
   }
-  render () {
+  render() {
     return (
       <div className="Polyalphabetic">
         <TextInput
@@ -20,23 +20,25 @@ class Polyalphabetic extends Cryptography {
           callback={this.recalculate.bind(this)}
           inputName="shift"
           inputLabel="Shift Word"
-          />
+        />
         <Encrypted
-          value={this.props.inValue}
+          value={this.state.encryptedValue}
           callback={this.recalculate.bind(this)}
-          />
+        />
         <Decrypted
           value={this.state.decryptedValue}
           callback={this.recalculate.bind(this)}
-          />
+        />
       </div>
-      )
+    )
   }
 
   applyShift(letterNumber, plusOrMinus, shift, shiftIndex) {
-    var shiftValue = Cryptography.getNumberFromCharacterCode(shift.charCodeAt(shiftIndex));
-    return letterNumber + (plusOrMinus * shiftValue);
+    var shiftValue = Cryptography.getNumberFromCharacterCode(
+      shift.charCodeAt(shiftIndex)
+    )
+    return letterNumber + plusOrMinus * shiftValue
   }
 }
 
-export default Polyalphabetic;
+export default Polyalphabetic
