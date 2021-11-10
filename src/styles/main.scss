@@ -1,10 +1,11 @@
-.App {
-  text-align: center;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.App {
+  text-align: center;
 }
 
 .App-header {
@@ -22,19 +23,16 @@
   font-size: large;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 .input-group {
   padding: 0.5em;
   margin: 0.5em;
-  border: 1px solid rgba(192, 192, 255, 1.0);
+  border: 1px solid rgba(192, 192, 255, 1);
   border-radius: 3px;
 }
 
-.input-group > label, .input-group > input, .input-group > textarea {
+.input-group > label,
+.input-group > input,
+.input-group > textarea {
   width: 45%;
   text-align: left;
   vertical-align: top;
