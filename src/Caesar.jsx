@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { NumberInput, Encrypted, Decrypted } from './Components'
+import Decrypted from './components/decrypted'
+import Encrypted from './components/encrypted'
+import NumberInput from './components/input/number'
 import caesar from './helpers/caesar'
 
 const Caesar = ({ inValue }) => {

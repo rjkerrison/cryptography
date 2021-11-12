@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { TextInput, Encrypted, Decrypted } from './Components'
+import Decrypted from './components/decrypted'
+import Encrypted from './components/encrypted'
+import TextInput from './components/input/text'
 import polyalphabetic from './helpers/polyalphabetic'
 
 const Polyalphabetic = ({ inValue }) => {
