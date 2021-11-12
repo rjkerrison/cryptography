@@ -19,9 +19,10 @@ const getShift = (shiftString, i, isEncryption) => {
 }
 
 const polyalphabetic = {
-  decrypt: (value, shiftString) =>
+  decrypt: (value, { shiftString }) =>
     polyalphabeticShiftString(value, shiftString, false),
-  encrypt: polyalphabeticShiftString,
+  encrypt: (value, { shiftString }) =>
+    polyalphabeticShiftString(value, shiftString),
 }
 
 export default polyalphabetic

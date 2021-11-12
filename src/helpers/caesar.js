@@ -12,8 +12,8 @@ const caesarShiftString = (value, shift) => {
 }
 
 const caesar = {
-  decrypt: (value, shift) => caesarShiftString(value, -shift),
-  encrypt: caesarShiftString,
+  decrypt: (value, { shift }) => caesarShiftString(value, -shift),
+  encrypt: (value, { shift }) => caesarShiftString(value, shift),
 }
 
 export default caesar

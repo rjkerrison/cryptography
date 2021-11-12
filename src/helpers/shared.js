@@ -27,7 +27,6 @@ const getCharCodeFromNumber = ({ number, isUppercase }) => {
 
 const shiftCharCode = (charCode, shift) => {
   if (!isLetter(charCode)) {
-    console.log({ charCode })
     return charCode
   }
 

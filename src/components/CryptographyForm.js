@@ -33,7 +33,6 @@ const CryptographyForm = ({ initialState, algorithm }) => {
 
   const handleGenericChange = (event) => {
     const { value, name } = event.target
-    console.log({ value, name })
     const newState = { ...state, [name]: value }
     setState(newState)
   }
@@ -43,7 +42,6 @@ const CryptographyForm = ({ initialState, algorithm }) => {
     if (typeof otherState[key] === 'number') {
       InputComponent = NumberInput
     }
-    console.log({ state })
 
     return (
       <InputComponent
