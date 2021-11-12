@@ -40,4 +40,4 @@ const shiftCharCode = (charCode, shift) => {
   return shiftedCharCode
 }
 
-export { getNumberFromCharacterCode, shiftCharCode }
+export { getNumberFromCharacterCode, getCharCodeFromNumber, shiftCharCode }

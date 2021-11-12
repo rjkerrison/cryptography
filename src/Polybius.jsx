@@ -1,70 +1,47 @@
-import React from 'react'
-import Cryptography from './cryptography'
+import React, { useEffect, useState } from 'react'
 import { TextInput, Encrypted, Decrypted } from './Components'
+import polybius from './helpers/polybius'
 
-class Polybius extends Cryptography {
-  constructor(props) {
-    super(props);
-    this.state = {
-      decryptedValue: 'polybius square',
-      delimiter: ','
-    }
-    this.encrypt(this.state);
-    this.initialise()
+const Polybius = () => {
+  const [decrypted, setDecrypted] = useState('polybius square')
+  const [encrypted, setEncrypted] = useState('')
+  const [delimiter, setDelimiter] = useState('.')
+
+  useEffect(() => {
+    handleDecryptedChange(decrypted)
+  }, [delimiter])
+
+  const handleDecryptedChange = (value) => {
+    const newEncrypted = polybius.encrypt(value, delimiter)
+    setEncrypted(newEncrypted)
+    setDecrypted(value)
   }
 
-  render() {
-    return (
-      <div className="Polybius">
-        <TextInput
-          inputName="delimiter"
-          inputLabel="Delimiter"
-          value={this.state.delimiter}
-          callback={this.recalculate.bind(this)}
-          />
-        <Encrypted
-          value={this.state.encryptedValue}
-          callback={this.recalculate.bind(this)}
-          />
-        <Decrypted
-          value={this.state.decryptedValue}
-          callback={this.recalculate.bind(this)}
-          />
-      </div>
-      )
+  const handleEncryptedChange = (value) => {
+    const newDecrypted = polybius.decrypt(value, delimiter)
+    console.log({ newDecrypted })
+    setDecrypted(newDecrypted)
+    setEncrypted(value)
   }
 
-  applyShift() {
-    return;
-  }
-
-  decrypt(state) {
-    var beforeValue = state.encryptedValue;
-
-    var cryptCharCodes = [];
-    var polybiusCodes = beforeValue.split(state.delimiter);
-    for (let i = 0; i < polybiusCodes.length / 2; i++) {
-      var letterNumber = (5 * polybiusCodes[2*i]) + (1 * polybiusCodes[2*i + 1]) - 6;
-      cryptCharCodes.push(Cryptography.getCharCodeFromNumber(letterNumber));
-    }
-
-    state.decryptedValue = String.fromCharCode.apply(null, cryptCharCodes)
-  }
-
-  encrypt(state) {
-    var beforeValue = state.decryptedValue;
-    var polybiusCodes = [];
-
-    for (let i = 0; i < beforeValue.length; i++) {
-      var letterNumber = Cryptography.getNumberFromCharacterCode(beforeValue.charCodeAt(i));
-      var polybiusRow = Math.floor(letterNumber / 5) + 1;
-      var polybiusColumn = (letterNumber % 5) + 1;
-      polybiusCodes.push(polybiusRow);
-      polybiusCodes.push(polybiusColumn);
-    }
-
-    state.encryptedValue = polybiusCodes.join(state.delimiter)
-  }
+  return (
+    <div className="Polybius">
+      <TextInput
+        inputName="delimiter"
+        inputLabel="Delimiter"
+        value={delimiter}
+        callback={(e) => setDelimiter(e.target.value)}
+      />
+      <Encrypted
+        value={encrypted}
+        callback={(e) => handleEncryptedChange(e.target.value)}
+      />
+      <Decrypted
+        value={decrypted}
+        callback={(e) => handleDecryptedChange(e.target.value)}
+      />
+    </div>
+  )
 }
 
-export default Polybius;
+export default Polybius
