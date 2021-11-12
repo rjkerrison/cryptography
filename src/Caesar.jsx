@@ -1,43 +1,49 @@
-import React from 'react'
-import Cryptography from './cryptography'
+import React, { useEffect, useState } from 'react'
 import { NumberInput, Encrypted, Decrypted } from './Components'
+import caesar from './helpers/caesar'
 
-class Caesar extends Cryptography {
-  constructor(props) {
-    super(props)
-    this.state = {
-      encryptedValue: this.props.inValue,
-      decryptedValue: 'akzi akzi',
-      shift: 1,
-    }
-    this.initialise()
-  }
-  render() {
-    return (
-      <div className="Caesar">
-        <NumberInput
-          value={this.state.shift}
-          callback={this.recalculate.bind(this)}
-          inputName="shift"
-          inputLabel="Shift Value"
-          min={0}
-          max={25}
-        />
-        <Encrypted
-          value={this.state.encryptedValue}
-          callback={this.recalculate.bind(this)}
-        />
-        <Decrypted
-          value={this.state.decryptedValue}
-          callback={this.recalculate.bind(this)}
-        />
-      </div>
-    )
+const Caesar = ({ inValue }) => {
+  const [encrypted, setEncrypted] = useState(inValue)
+  const [decrypted, setDecrypted] = useState('')
+  const [shift, setShift] = useState(1)
+
+  useEffect(() => {
+    handleEncryptedChange(encrypted)
+  }, [shift])
+
+  const handleDecryptedChange = (value) => {
+    const newEncrypted = caesar.encrypt(value, shift)
+    setEncrypted(newEncrypted)
+    setDecrypted(value)
   }
 
-  applyShift(letterNumber, plusOrMinus, shift) {
-    return letterNumber + plusOrMinus * shift
+  const handleEncryptedChange = (value) => {
+    const newDecrypted = caesar.decrypt(value, shift)
+    console.log({ newDecrypted })
+    setDecrypted(newDecrypted)
+    setEncrypted(value)
   }
+
+  return (
+    <div className="Caesar">
+      <NumberInput
+        value={shift}
+        callback={(e) => setShift(e.target.value)}
+        inputName="shift"
+        inputLabel="Shift Value"
+        min={0}
+        max={25}
+      />
+      <Encrypted
+        value={encrypted}
+        callback={(e) => handleEncryptedChange(e.target.value)}
+      />
+      <Decrypted
+        value={decrypted}
+        callback={(e) => handleDecryptedChange(e.target.value)}
+      />
+    </div>
+  )
 }
 
 export default Caesar

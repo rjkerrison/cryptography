@@ -1,44 +1,47 @@
-import React from 'react'
-import Cryptography from './cryptography'
+import React, { useEffect, useState } from 'react'
 import { TextInput, Encrypted, Decrypted } from './Components'
+import polyalphabetic from './helpers/polyalphabetic'
 
-class Polyalphabetic extends Cryptography {
-  constructor(props) {
-    super(props)
-    this.state = {
-      encryptedValue: this.props.inValue,
-      decryptedValue: 'akzi akzi',
-      shift: 'snake',
-    }
-    this.initialise()
-  }
-  render() {
-    return (
-      <div className="Polyalphabetic">
-        <TextInput
-          value={this.state.shift}
-          callback={this.recalculate.bind(this)}
-          inputName="shift"
-          inputLabel="Shift Word"
-        />
-        <Encrypted
-          value={this.state.encryptedValue}
-          callback={this.recalculate.bind(this)}
-        />
-        <Decrypted
-          value={this.state.decryptedValue}
-          callback={this.recalculate.bind(this)}
-        />
-      </div>
-    )
+const Polyalphabetic = ({ inValue }) => {
+  const [encrypted, setEncrypted] = useState(inValue)
+  const [decrypted, setDecrypted] = useState('')
+  const [shiftString, setShiftString] = useState('snake')
+
+  useEffect(() => {
+    handleEncryptedChange(encrypted)
+  }, [shiftString])
+
+  const handleDecryptedChange = (value) => {
+    const newEncrypted = polyalphabetic.encrypt(value, shiftString)
+    setEncrypted(newEncrypted)
+    setDecrypted(value)
   }
 
-  applyShift(letterNumber, plusOrMinus, shift, shiftIndex) {
-    var shiftValue = Cryptography.getNumberFromCharacterCode(
-      shift.charCodeAt(shiftIndex)
-    )
-    return letterNumber + plusOrMinus * shiftValue
+  const handleEncryptedChange = (value) => {
+    const newDecrypted = polyalphabetic.decrypt(value, shiftString)
+    console.log({ newDecrypted })
+    setDecrypted(newDecrypted)
+    setEncrypted(value)
   }
+
+  return (
+    <div className="Polyalphabetic">
+      <TextInput
+        value={shiftString}
+        callback={(e) => setShiftString(e.target.value)}
+        inputName="shift"
+        inputLabel="Shift Word"
+      />
+      <Encrypted
+        value={encrypted}
+        callback={(e) => handleEncryptedChange(e.target.value)}
+      />
+      <Decrypted
+        value={decrypted}
+        callback={(e) => handleDecryptedChange(e.target.value)}
+      />
+    </div>
+  )
 }
 
 export default Polyalphabetic
