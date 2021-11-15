@@ -1,5 +1,5 @@
 import { getCharCodeFromNumber, getNumberFromCharacterCode } from './shared'
-import { CypherAlgorithm, CypherFunction } from './types'
+import { CypherAlgorithm, CypherFunction, CypherInfo } from './types'
 
 const decrypt: CypherFunction<PolybiusConfig> = (
   encryptedValue,
@@ -43,9 +43,21 @@ const encrypt: CypherFunction<PolybiusConfig> = (
   return polybiusCodes.join(delimiter)
 }
 
-const polybius: CypherAlgorithm<PolybiusConfig> = {
+const algorithm: CypherAlgorithm<PolybiusConfig> = {
   decrypt,
   encrypt,
+}
+
+const polybius: CypherInfo<PolybiusConfig> = {
+  title: 'Polybius',
+  algorithm,
+  initialState: {
+    delimiter: '.',
+    decrypted: 'hello there',
+  },
+  stateLabels: {
+    delimiter: 'Separator between coordinates',
+  },
 }
 
 interface PolybiusConfig {

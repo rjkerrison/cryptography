@@ -7,29 +7,16 @@ const Cypher = () => {
   const params = useParams()
   const navigate = useNavigate()
 
-  console.log({ params })
-  console.log({ cyphers })
-
   const { slug } = params
-  const [state, setState] = useState({
-    title: 'FUCK',
-    cypherProps: {
-      initialState: { shift: 'NOPE' },
-      algorithm: { decrypt: () => {}, encrypt: () => {} },
-    },
-  })
+  const [state, setState] = useState({})
 
   useEffect(() => {
-    console.log({ cypher: cyphers[slug] })
     if (!cyphers[slug]) {
-      console.log({ cyphers })
-      console.log('redirecting')
       navigate('/')
       return
     }
 
     const { title, ...cypherProps } = cyphers[slug]
-    console.log({ title, cypherProps })
     setState({ title, cypherProps })
   }, [slug])
 

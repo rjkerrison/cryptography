@@ -1,5 +1,5 @@
 import { getNumberFromCharacterCode, shiftCharCode } from './shared'
-import { CypherFunction } from './types'
+import { CypherFunction, CypherInfo } from './types'
 
 const polyalphabeticShiftString = (
   value: string,
@@ -29,9 +29,19 @@ const decrypt: CypherFunction<PolyalphaConfig> = (value, { shiftString }) =>
 const encrypt: CypherFunction<PolyalphaConfig> = (value, { shiftString }) =>
   polyalphabeticShiftString(value, shiftString)
 
-const polyalphabetic = {
-  decrypt,
-  encrypt,
+const polyalphabetic: CypherInfo<PolyalphaConfig> = {
+  title: 'Polyalphabetic',
+  algorithm: {
+    decrypt,
+    encrypt,
+  },
+  initialState: {
+    shiftString: 'snake',
+    decrypted: 'it belongs in a museum',
+  },
+  stateLabels: {
+    shiftString: 'Shift characters according to',
+  },
 }
 
 interface PolyalphaConfig {

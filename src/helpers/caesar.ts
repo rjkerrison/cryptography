@@ -1,5 +1,5 @@
 import { shiftCharCode } from './shared'
-import { CypherAlgorithm } from './types'
+import { CypherAlgorithm, CypherInfo } from './types'
 
 const caesarShiftString = (value: string, shift: number) => {
   const cryptCharCodes = []
@@ -12,13 +12,25 @@ const caesarShiftString = (value: string, shift: number) => {
   return String.fromCharCode(...cryptCharCodes)
 }
 
-const caesar: CypherAlgorithm<CaesarConfig> = {
+const algorithm: CypherAlgorithm<CaesarConfig> = {
   decrypt: (value, { shift }) => caesarShiftString(value, -shift),
   encrypt: (value, { shift }) => caesarShiftString(value, shift),
 }
 
 interface CaesarConfig {
   shift: number
+}
+
+const caesar: CypherInfo<CaesarConfig> = {
+  title: 'Caesar',
+  algorithm,
+  initialState: {
+    shift: 1,
+    decrypted: 'alea jacta est',
+  },
+  stateLabels: {
+    shift: 'Shift characters by',
+  },
 }
 
 export default caesar
