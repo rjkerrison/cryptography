@@ -8,7 +8,7 @@ const NumberInput = ({ inputName, inputLabel, min, max, value, callback }) => {
         max={max}
         name={inputName}
         value={value}
-        onChange={callback}
+        onChange={({ target }) => callback(target.name, parseInt(target.value))}
       />
     </div>
   )

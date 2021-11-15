@@ -1,4 +1,4 @@
-const isLetter = (charCode) => {
+const isLetter = (charCode: number) => {
   // uppercase range
   if (charCode <= 90) {
     return charCode >= 65
@@ -10,7 +10,7 @@ const isLetter = (charCode) => {
   return false
 }
 
-const getNumberFromCharacterCode = (charCode) => {
+const getNumberFromCharacterCode = (charCode: number) => {
   if (charCode < 97) {
     // capitals go to the
     return { number: charCode - 65, isUppercase: true }
@@ -18,19 +18,25 @@ const getNumberFromCharacterCode = (charCode) => {
   return { number: charCode - 97, isUppercase: false }
 }
 
-const getCharCodeFromNumber = ({ number, isUppercase }) => {
+const getCharCodeFromNumber = ({
+  number,
+  isUppercase,
+}: {
+  number: number,
+  isUppercase?: boolean
+}) => {
   if (isUppercase) {
     return number + 65
   }
   return number + 97
 }
 
-const shiftCharCode = (charCode, shift) => {
+const shiftCharCode = (charCode: number, shift: number) => {
   if (!isLetter(charCode)) {
     return charCode
   }
 
-  const { number, isUppercase } = getNumberFromCharacterCode(charCode, shift)
+  const { number, isUppercase } = getNumberFromCharacterCode(charCode)
   const shiftedCharCode = getCharCodeFromNumber({
     number: (number + shift + 26) % 26,
     isUppercase,

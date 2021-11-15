@@ -1,16 +1,31 @@
-import Caesar from './Caesar.jsx'
-import Polyalphabetic from './Polyalphabetic.jsx'
-import Polybius from './Polybius.jsx'
+import { Route, Routes, BrowserRouter as Router, Link } from 'react-router-dom'
+
+import Cypher from './pages/Cypher.js'
 
 const App = () => {
   return (
     <div className="App">
-      <h2>Caesar</h2>
-      <Caesar />
-      <h2>Polyalphabetic</h2>
-      <Polyalphabetic />
-      <h2>Polybius</h2>
-      <Polybius />
+      <Router>
+        <header>
+          <h1>Cryptography</h1>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/cypher/caesar">Caesar</Link>
+              </li>
+              <li>
+                <Link to="/cypher/polyalpha">Polyalphabetic</Link>
+              </li>
+              <li>
+                <Link to="/cypher/polybius">Polybius</Link>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <Routes>
+          <Route path="/cypher/:slug" element={<Cypher />} />
+        </Routes>
+      </Router>
     </div>
   )
 }

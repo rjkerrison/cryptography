@@ -1,14 +1,15 @@
-const TextInput = ({ inputName, inputLabel, value, callback }) => {
+const Toggle = ({ inputName, inputLabel, value, callback }) => {
   return (
     <div className="input-group">
       <label htmlFor={inputName}>{inputLabel}</label>
-      <textarea
+      <input
+        type="checkbox"
         name={inputName}
-        value={value}
+        checked={value}
         onChange={({ target }) => callback(target.name, target.value)}
-      ></textarea>
+      ></input>
     </div>
   )
 }
 
-export default TextInput
+export default Toggle

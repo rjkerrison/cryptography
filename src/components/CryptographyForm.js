@@ -3,19 +3,35 @@ import Decrypted from './decrypted'
 import Encrypted from './encrypted'
 import NumberInput from './input/number'
 import TextInput from './input/text'
+import Toggle from './input/Toggle'
 
 const CryptographyForm = ({ initialState, algorithm }) => {
-  const {
-    decrypted: initialDecrypted,
-    encrypted: initialEncrypted,
-    ...otherState
-  } = initialState
-  const [decrypted, setDecrypted] = useState(initialDecrypted)
-  const [encrypted, setEncrypted] = useState(initialEncrypted)
-  const [state, setState] = useState(otherState)
+  const [isEncryption, setIsEncryption] = useState(false)
+  const [decrypted, setDecrypted] = useState('')
+  const [encrypted, setEncrypted] = useState('')
+  const [state, setState] = useState({})
+  const [stateSetters, setStateSetters] = useState([])
 
   useEffect(() => {
-    handleDecryptedChange(decrypted)
+    const {
+      decrypted: initialDecrypted,
+      encrypted: initialEncrypted,
+      ...otherState
+    } = initialState
+
+    setDecrypted(initialDecrypted)
+    setEncrypted(initialEncrypted)
+    setState(otherState)
+  }, [initialState])
+
+  useEffect(() => {
+    if (isEncryption) {
+      handleDecryptedChange(decrypted)
+    } else {
+      handleEncryptedChange(encrypted)
+    }
+    const stateSetters = getStateSetters(state, handleGenericChange)
+    setStateSetters(stateSetters)
   }, [state])
 
   const handleDecryptedChange = (value) => {
@@ -31,15 +47,36 @@ const CryptographyForm = ({ initialState, algorithm }) => {
     setEncrypted(value)
   }
 
-  const handleGenericChange = (event) => {
-    const { value, name } = event.target
+  const handleGenericChange = (name, value) => {
     const newState = { ...state, [name]: value }
     setState(newState)
   }
 
-  const stateSetters = Object.keys(state).map((key) => {
+  return (
+    <div className="CryptographyForm">
+      {stateSetters}
+      <Decrypted
+        value={decrypted}
+        callback={(_, value) => handleDecryptedChange(value)}
+      />
+      <Encrypted
+        value={encrypted}
+        callback={(_, value) => handleEncryptedChange(value)}
+      />
+      <Toggle
+        value={isEncryption}
+        inputName={'isEncryption'}
+        inputLabel={'Are we encrypting?'}
+        callback={() => setIsEncryption(!isEncryption)}
+      />
+    </div>
+  )
+}
+
+const getStateSetters = (state, handleGenericChange) => {
+  return Object.keys(state).map((key) => {
     let InputComponent = TextInput
-    if (typeof otherState[key] === 'number') {
+    if (typeof state[key] === 'number') {
       InputComponent = NumberInput
     }
 
@@ -53,20 +90,6 @@ const CryptographyForm = ({ initialState, algorithm }) => {
       />
     )
   })
-
-  return (
-    <div className="CryptographyForm">
-      {stateSetters}
-      <Encrypted
-        value={encrypted}
-        callback={(e) => handleEncryptedChange(e.target.value)}
-      />
-      <Decrypted
-        value={decrypted}
-        callback={(e) => handleDecryptedChange(e.target.value)}
-      />
-    </div>
-  )
 }
 
 export default CryptographyForm
